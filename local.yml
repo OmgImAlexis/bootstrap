@@ -4,8 +4,6 @@
 ---
 - hosts: localhost
   become: true
-  vars_files:
-    - vars/default.yml
 
   tasks:
     - name: Install Prerequisites
@@ -32,15 +30,15 @@
 # User + Key Setup
     - name: Create a new regular user with sudo privileges
       user:
-        name: "{{ username }}"
+        name: "xo"
         state: present
         groups: ['wheel']
         append: true
         create_home: true
         shell: /bin/bash
 
-    - name: Set authorized key for  {{ username }}
-      ansible.builtin.shell: curl https://github.com/{{ username }}.keys | tee -a ~/.ssh/authorized_keys
+    - name: Set authorized key for OmgImAlexis
+      ansible.builtin.shell: curl https://github.com/OmgImAlexis.keys | tee -a ~/.ssh/authorized_keys
       args:
         executable: /bin/bash
 
@@ -58,7 +56,7 @@
 
     - name: Install required system packages
       apt:
-        name: "{{ sys_packages }}"
+        name: [ 'curl', 'nano', 'git', 'ufw']
         state: latest
 
 # UFW Setup
