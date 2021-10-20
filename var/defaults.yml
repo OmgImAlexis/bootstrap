@@ -1,0 +1,3 @@
+---
+username: xo
+sys_packages: [ 'curl', 'vim', 'git', 'ufw']

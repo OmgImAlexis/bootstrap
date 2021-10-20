@@ -1,0 +1,74 @@
+#################################################
+# Playbook: Initial Server Setup
+#################################################
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: Install Prerequisites
+      apt:
+        update_cache: true
+        name: 'aptitude'
+        state: latest
+        force_apt_get: true
+
+# Sudo Group Setup
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have password-less sudo
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+
+# User + Key Setup
+    - name: Create a new regular user with sudo privileges
+      user:
+        name: "{{ username }}"
+        state: present
+        groups: ['wheel']
+        append: true
+        create_home: true
+        shell: /bin/bash
+
+    - name: Set authorized key for  {{ username }}
+      ansible.builtin.shell: curl https://github.com/{{ username }}.keys | tee -a ~/.ssh/authorized_keys
+      args:
+        executable: /bin/bash
+
+    - name: Disable password authentication for root
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin prohibit-password'
+
+# Install Packages
+    - name: Update apt
+      apt:
+        update_cache: true
+
+    - name: Install required system packages
+      apt:
+        name: {{ sys_packages }}
+        state: latest
+
+# UFW Setup
+    - name: UFW - Allow SSH connections
+      ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: UFW - Deny all other incoming traffic by default
+      ufw:
+        state: enabled
+        policy: deny
+        direction: incoming
