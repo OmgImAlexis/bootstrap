@@ -1,5 +1,8 @@
 #!/bin/bash
 
+BOOTSTRAP_INITAL_SCRIPT="~/bootstrap.sh"
+BOOTSTRAP_FINAL_DIR="~/code/bootstrap"
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -52,10 +55,13 @@ fi
 # Run command and send stdout/stderr to /dev/null
 run() {
     local args="$*";
-    if [ ! -z $DEBUG ]; then
+    if [ ! -z $DEBUG ]
+    then
         logCommand $args;
-    fi; 
-    $args > /dev/null 2>&1;
+        eval $args;
+    else
+        $args > /dev/null 2>&1;
+    fi
 }
 
 # Update packages
@@ -73,5 +79,15 @@ run "sudo apt install -y python3-pip";
 
 # Install ansible
 run "apt-get install -y ansible"
+
+# Clone the bootstrap repo and delete any inital files
+run "mkdir -p ~/code/"
+run "git clone https://github.com/OmgImAlexis/bootstrap $BOOTSTRAP_FINAL_DIR"
+run "rm $BOOTSTRAP_INITAL_SCRIPT"
+
+run "cd $BOOTSTRAP_FINAL_DIR"
+
+# Run ansible bootstrap script
+run "ansible-pull "
 
 logSuccess "Done!";
