@@ -1,7 +1,5 @@
 #!/bin/bash
 
-BOOTSTRAP_FINAL_DIR="~/code/bootstrap"
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -70,7 +68,7 @@ run "apt-get upgrade -y";
 
 # Install essential packages
 logInfo "Installing essential packages…";
-run "apt-get install -y curl wget git apt-transport-https ca-certificates gnupg-agent build-essential gcc g++ make net-tools";
+run "apt-get install -y git apt-transport-https ca-certificates build-essential gcc g++ make net-tools";
 
 # Install Python 3
 logInfo "Installing Python 3…";
@@ -79,12 +77,7 @@ run "sudo apt install -y python3-pip";
 # Install ansible
 run "apt-get install -y ansible"
 
-# Clone the bootstrap repo and delete any inital files
-run "mkdir -p ~/code/"
-run "git clone https://github.com/OmgImAlexis/bootstrap $BOOTSTRAP_FINAL_DIR"
-run "cd $BOOTSTRAP_FINAL_DIR"
-
 # Run ansible bootstrap script
-run "ansible-pull "
+run "ansible-pull -U https://github.com/OmgImAlexis/bootstrap.git"
 
 logSuccess "Done!";
