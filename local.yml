@@ -2,7 +2,7 @@
 # Playbook: Initial Server Setup
 #################################################
 ---
-- hosts: localhost
+- hosts: localhost,127.0.0.1
   connection: local
   become: true
 
@@ -38,10 +38,10 @@
         create_home: true
         shell: /bin/bash
 
-    - name: Set authorized key for OmgImAlexis
-      ansible.builtin.shell: curl https://github.com/OmgImAlexis.keys | tee -a ~/.ssh/authorized_keys
-      args:
-        executable: /bin/bash
+    # - name: Set authorized key for OmgImAlexis
+    #   ansible.builtin.shell: curl https://github.com/OmgImAlexis.keys | tee -a ~/.ssh/authorized_keys
+    #   args:
+    #     executable: /bin/bash
 
     - name: Disable password authentication for root
       lineinfile:
