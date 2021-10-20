@@ -77,6 +77,9 @@ run "sudo apt install -y python3-pip";
 # Install ansible
 run "apt-get install -y ansible"
 
+# Setup local host file for ansible-pull
+run "echo 'localhost ansible_connection=local' > /etc/ansible/hosts"
+
 # Run ansible bootstrap script
 run "ansible-pull -U https://github.com/OmgImAlexis/bootstrap.git"
 
