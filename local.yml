@@ -2,7 +2,7 @@
 # Playbook: Initial Server Setup
 #################################################
 ---
-- hosts: all
+- hosts: localhost
   become: true
   vars_files:
     - vars/default.yml
@@ -58,7 +58,7 @@
 
     - name: Install required system packages
       apt:
-        name: {{ sys_packages }}
+        name: "{{ sys_packages }}"
         state: latest
 
 # UFW Setup
