@@ -1,6 +1,5 @@
 #!/bin/bash
 
-BOOTSTRAP_INITAL_SCRIPT="~/bootstrap.sh"
 BOOTSTRAP_FINAL_DIR="~/code/bootstrap"
 
 # Colors
@@ -83,8 +82,6 @@ run "apt-get install -y ansible"
 # Clone the bootstrap repo and delete any inital files
 run "mkdir -p ~/code/"
 run "git clone https://github.com/OmgImAlexis/bootstrap $BOOTSTRAP_FINAL_DIR"
-run "rm $BOOTSTRAP_INITAL_SCRIPT"
-
 run "cd $BOOTSTRAP_FINAL_DIR"
 
 # Run ansible bootstrap script
